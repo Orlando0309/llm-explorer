@@ -91,7 +91,7 @@ const FineTuningLab: React.FC = () => {
     const nodes = [80, 140, 200, 260];
 
     return (
-        <svg width="100%" height="100%" viewBox="0 0 400 350" className="overflow-visible">
+        <svg width="100%" height="100%" viewBox="0 0 400 350" preserveAspectRatio="xMidYMid meet">
             <defs>
                 <pattern id="gridPattern" width="10" height="10" patternUnits="userSpaceOnUse">
                     <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#1e293b" strokeWidth="0.5"/>
@@ -285,7 +285,8 @@ const FineTuningLab: React.FC = () => {
                 <g key={`out-${i}`} transform={`translate(${xOutput}, ${y})`}>
                     <polygon points="0,-12 12,0 0,12 -12,0" fill="#1e293b" stroke="#8b5cf6" strokeWidth="2" />
                     <circle r="4" fill="#8b5cf6" opacity={isTraining ? 1 : 0.5}>
-                        {isTraining && <animate attributeName="opacity" values="0.2;1;0.2" dur="0.5s" repeatCount="indefinite" />}
+                        {isTraining && <animate attributeName="opacity" values="0.2;1;0.2" dur="0.5s" repeatCount="indefinite" />
+                        }
                     </circle>
                 </g>
             ))}
@@ -444,7 +445,7 @@ const FineTuningLab: React.FC = () => {
       <div className="lg:col-span-8 flex flex-col gap-6">
           
           {/* 1. NEURAL SURGERY VIEW */}
-          <div className="bg-slate-900 rounded-xl border border-slate-800 shadow-2xl relative overflow-hidden flex flex-col h-[400px]">
+          <div className="bg-slate-900 rounded-xl border border-slate-800 shadow-2xl relative flex flex-col h-[450px] overflow-hidden">
               <div className="absolute top-0 left-0 right-0 bg-slate-900/90 backdrop-blur border-b border-slate-800 p-3 flex justify-between items-center z-10">
                   <div className="flex items-center gap-2">
                       <Activity className="text-emerald-400" size={18} />
@@ -462,12 +463,14 @@ const FineTuningLab: React.FC = () => {
                   </div>
               </div>
               
-              <div className="flex-1 pt-10">
-                  {renderNeuralSurgery()}
+              <div className="flex-1 w-full min-h-0 relative mt-10">
+                  <div className="absolute inset-0">
+                       {renderNeuralSurgery()}
+                  </div>
               </div>
 
               {/* Visual Decoder / Legend */}
-              <div className="bg-slate-950 border-t border-slate-800 p-3 grid grid-cols-2 md:grid-cols-4 gap-4 text-[10px] text-slate-400">
+              <div className="bg-slate-950 border-t border-slate-800 p-3 grid grid-cols-2 md:grid-cols-4 gap-4 text-[10px] text-slate-400 z-10">
                   <div className="flex items-center gap-2">
                       <Box className="text-emerald-500" size={14} />
                       <span>Data Batches (Inputs)</span>

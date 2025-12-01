@@ -13,7 +13,8 @@ export enum ModelCapability {
 
 export enum AppMode {
   Inference = 'Playground (Inference)',
-  Training = 'Training Lab (Fine-Tuning)'
+  Training = 'Training Lab (Fine-Tuning)',
+  RAG = 'Advanced RAG (Knowledge Retrieval)'
 }
 
 export enum TrainingMethod {

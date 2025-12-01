@@ -1,7 +1,6 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { ModelCapability } from "../types";
-
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 interface GenerateResponse {
   text: string;
@@ -29,6 +28,8 @@ export const generateLLMResponse = async (
   if (!process.env.API_KEY) {
     throw new Error("API Key is missing");
   }
+
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
   let modelName = 'gemini-2.5-flash';
   let systemInstruction = "You are a helpful AI assistant. Keep your answers concise, educational, and safe for kids.";

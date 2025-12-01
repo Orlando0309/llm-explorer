@@ -6,7 +6,8 @@ import ProbabilityChart from './components/ProbabilityChart';
 import StepVisualizer from './components/StepVisualizer';
 import ConceptExplainer from './components/ConceptExplainer';
 import FineTuningLab from './components/FineTuningLab';
-import { Brain, Sparkles, Image as ImageIcon, Settings, PlayCircle, Cpu, HelpCircle, MessageSquare, Beaker, Terminal } from 'lucide-react';
+import RAGViz from './components/RAGViz';
+import { Brain, Sparkles, Image as ImageIcon, Settings, PlayCircle, Cpu, HelpCircle, MessageSquare, Beaker, Terminal, Database } from 'lucide-react';
 
 const App: React.FC = () => {
   const [state, setState] = useState<SimulationState>({
@@ -132,53 +133,16 @@ const App: React.FC = () => {
       }
   };
 
-  return (
-    <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-indigo-500/30">
-      
-      {/* Header */}
-      <header className="w-full bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-                <div className="p-2 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-xl shadow-lg shadow-indigo-500/20">
-                    <Brain size={24} className="text-white" />
-                </div>
-                <div>
-                    <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-purple-300 to-cyan-300">
-                        LLM Explorer
-                    </h1>
-                </div>
-            </div>
-            
-            {/* Mode Switcher */}
-            <div className="flex bg-slate-800/50 p-1 rounded-lg border border-slate-700">
-                <button 
-                  onClick={() => setState(prev => ({...prev, mode: AppMode.Inference}))}
-                  className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-bold transition-all ${state.mode === AppMode.Inference ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-white'}`}
-                >
-                   <Terminal size={14} />
-                   Playground
-                </button>
-                <button 
-                  onClick={() => setState(prev => ({...prev, mode: AppMode.Training}))}
-                  className={`flex items-center gap-2 px-4 py-1.5 rounded-md text-sm font-bold transition-all ${state.mode === AppMode.Training ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:text-white'}`}
-                >
-                   <Beaker size={14} />
-                   Fine-Tuning Lab
-                </button>
-            </div>
-
-            <div className="hidden md:block text-slate-500 text-xs font-mono">
-                Powered by Gemini 2.5
-            </div>
-        </div>
-      </header>
-
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        
-        {state.mode === AppMode.Training ? (
-            <FineTuningLab />
-        ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+  const renderContent = () => {
+      switch (state.mode) {
+          case AppMode.Training:
+              return <FineTuningLab />;
+          case AppMode.RAG:
+              return <RAGViz />;
+          case AppMode.Inference:
+          default:
+              return (
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 {/* Left Column: Controls (4 cols) */}
                 <section className="lg:col-span-4 space-y-6">
                     
@@ -431,8 +395,60 @@ const App: React.FC = () => {
 
                 </section>
             </div>
-        )}
+              );
+      }
+  };
 
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-indigo-500/30">
+      
+      {/* Header */}
+      <header className="w-full bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+                <div className="p-2 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-xl shadow-lg shadow-indigo-500/20">
+                    <Brain size={24} className="text-white" />
+                </div>
+                <div>
+                    <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-purple-300 to-cyan-300">
+                        LLM Explorer
+                    </h1>
+                </div>
+            </div>
+            
+            {/* Mode Switcher */}
+            <div className="flex bg-slate-800/50 p-1 rounded-lg border border-slate-700 overflow-x-auto">
+                <button 
+                  onClick={() => setState(prev => ({...prev, mode: AppMode.Inference}))}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${state.mode === AppMode.Inference ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-400 hover:text-white'}`}
+                >
+                   <Terminal size={14} />
+                   Playground
+                </button>
+                <button 
+                  onClick={() => setState(prev => ({...prev, mode: AppMode.Training}))}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${state.mode === AppMode.Training ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-400 hover:text-white'}`}
+                >
+                   <Beaker size={14} />
+                   Fine-Tuning Lab
+                </button>
+                 <button 
+                  onClick={() => setState(prev => ({...prev, mode: AppMode.RAG}))}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-bold transition-all whitespace-nowrap ${state.mode === AppMode.RAG ? 'bg-cyan-600 text-white shadow-md' : 'text-slate-400 hover:text-white'}`}
+                >
+                   <Database size={14} />
+                   Advanced RAG
+                </button>
+            </div>
+
+            <div className="hidden md:block text-slate-500 text-xs font-mono">
+                Powered by Gemini 2.5
+            </div>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        {renderContent()}
       </main>
     </div>
   );

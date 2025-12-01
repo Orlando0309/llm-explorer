@@ -17,7 +17,8 @@ const SingleNeuronViz: React.FC<SingleNeuronVizProps> = ({ method, isTraining })
   // Constants
   const inputs = [0.8, 0.5];
   const target = 0.9; // What the neuron *wants* to output
-  const bias = 0.1;
+  // Fix: Explicitly type bias as number to avoid "types have no overlap" error in comparison
+  const bias: number = 0.1;
   const learningRate = 0.05;
 
   // Refs for animation loop
